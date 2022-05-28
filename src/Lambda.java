@@ -256,8 +256,8 @@ public final class Lambda {
      * Generates an array of realisations from {@link Lambda#binomial(int, double)}.
      * 
      * @param   n - amount of samples
-     * @param   p = probability of success
-     * @param   size = size of the array given
+     * @param   p - probability of success
+     * @param   size - size of the array given
      * @return  array of sums of each bernoulli trial
      */
     public static int[] binomial(int n, double p, int size) {
@@ -265,5 +265,36 @@ public final class Lambda {
         return Arrays.stream(new int[size])
                 .map(i -> binomial(n, p))
                 .toArray();
+    }
+
+    /**
+     * Returns a sample from the normal distribution with given parameters <i>mu</i> and
+     * <i>sigma</i>. As the normal has a difficult cumulative distributive function to work with,
+     * inverse sampling was not used. As an alternative a <i>Box-Muller transformation</i> was
+     * performed, where there is a slight lack of accuracy which is traded for performance.
+     *
+     * @param   mu - mean of the normal distribution
+     * @param   sigma - standard deviation of the normal distribution
+     * @return  sample of the given normal distribution ~ N(mu, sigma)
+     */
+    public static double normal(double mu, double sigma) {
+        double u = 2 * uniform() - 1;
+        double v = 2 * uniform() - 1;
+        double r = u * u + v * v;
+
+        /* If outside interval [0, 1] recalls the function */
+        if (r == 0 || r >=1) return normal(mu, sigma);
+        return mu + ((u * (Math.sqrt(-2 * Math.log(r)/r))) * sigma);
+    }
+
+    /**
+     * Returns a sample from the standard normal distribution using
+     * {@link Lambda#normal(double, double)}. The standard normal distribution in this case is
+     * defined where {@code mu = 0} and {@code sigma = 1}.
+     *
+     * @return sample from standard normal distribution
+     */
+    public static double normal() {
+        return normal(0, 1);
     }
 }
