@@ -1,5 +1,5 @@
 import java.util.Arrays;
-import java.util.stream.IntStream;
+import java.lang.Math;
 
 /**
  * The class {@code Lambda} contains methods to deal with random sampling from various
@@ -194,12 +194,38 @@ public final class Lambda {
 
     /**
      * Overloaded method of {@link Lambda#uniform(double, double, int)} however returns an array
-     * of realisations of the standard uniform distribution.
+     * of realisations of the <i>standard uniform distribution</i>.
      *
      * @param   size - sized of the returned array
      * @return  array of standard uniform realisations.
      */
     public static double[] uniform(int size) {
-        return uniform(size, 0, 1);
+        return uniform(0, 1, size);
+    }
+
+    /**
+     * Samples from the <i>exponential distribution</i> where the lambda represents the parameter
+     * for the exponential distribution. This is done by using the inverse sampling technique.
+     *
+     * @param   lambda - parameter for exponential distribution.
+     * @return  sample from exponential distribution.
+     */
+    public static double exponential(double lambda) {
+        if (lambda < 0) throw new IllegalArgumentException("Lambda must be greater than 0");
+        return -(1 / lambda) * Math.log(uniform());
+    }
+
+    /**
+     * Generates an array of realisations of the exponential distribution of a given size.
+     *
+     * @param   lambda - parameter for exponential distribution
+     * @param   size - size of
+     * @return
+     */
+    public static double[] exponential(double lambda, int size) {
+        if (size < 0) throw new IllegalArgumentException("Size must be a non-negative integer.");
+        return Arrays.stream(new double[size])
+                .map(i -> exponential(lambda))
+                .toArray();
     }
 }
