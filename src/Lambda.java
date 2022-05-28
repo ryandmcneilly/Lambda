@@ -220,12 +220,50 @@ public final class Lambda {
      *
      * @param   lambda - parameter for exponential distribution
      * @param   size - size of
-     * @return
+     * @return  array of samples from the exponential distribution.
      */
     public static double[] exponential(double lambda, int size) {
         if (size < 0) throw new IllegalArgumentException("Size must be a non-negative integer.");
         return Arrays.stream(new double[size])
                 .map(i -> exponential(lambda))
+                .toArray();
+    }
+
+    /**
+     * Generates a realisation of a bernoulli random variable with a given parameter p.
+     *
+     * @param   p - probability of success
+     * @return  returns 1 if success, else 0.
+     */
+    public static int bernoulli(double p) {
+        if (!(0 <= p || p <= 1)) throw new IllegalArgumentException("0 <= p <= 1 must hold.");
+        return (uniform() < p) ? 1 : 0;
+    }
+
+    /**
+     * Generates a realisation of a binomial random variable with parameters <i>n</i> and <i>p</i>.
+     *
+     * @param   n - amount of samples
+     * @param   p - probability of success for each sample
+     * @return  sum of each bernoulli trial
+     */
+    public static int binomial(int n, double p) {
+        if (n == 0) return 0;
+        return bernoulli(p) + binomial(n-1, p);
+    }
+
+    /**
+     * Generates an array of realisations from {@link Lambda#binomial(int, double)}.
+     * 
+     * @param   n - amount of samples
+     * @param   p = probability of success
+     * @param   size = size of the array given
+     * @return  array of sums of each bernoulli trial
+     */
+    public static int[] binomial(int n, double p, int size) {
+        if (size < 0) throw new IllegalArgumentException("Size must be a non-negative integer.");
+        return Arrays.stream(new int[size])
+                .map(i -> binomial(n, p))
                 .toArray();
     }
 }
