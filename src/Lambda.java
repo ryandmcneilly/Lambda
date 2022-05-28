@@ -6,13 +6,24 @@ import java.util.Arrays;
 public final class Lambda {
 
     /**
-     * Private constructor for the class
+     * Private constructor for the class.
      */
     private Lambda() {}
 
+    /**
+     * Famous mathematical constant which has numerous applications/definitions, however in this
+     * context used to define the <i>exponential distribution</i> and the <i>normal
+     * distribution</i>.
+     */
     public static final double E = 2.7182818284590452354;
 
+    /**
+     * Mathematical constant that is typically defined as the ratio of the circumference of a
+     * circle to its diameter.
+     */
     public static final double PI = 3.14159265358979323846;
+
+    private long seed = 0;
 
     /**
      * Returns pseudo-random double using a <i>linear congruential generator</i> which outputs
@@ -118,5 +129,40 @@ public final class Lambda {
         return Arrays.stream(lcg64Array(seed, multiplier, increment, size))
                 .mapToInt(i -> (int) i)
                 .toArray();
+    }
+
+    /**
+     * Returns a seed value in the form of a {@code long} using {@link System#nanoTime()}. As a
+     * restriction of the seed is to be positive, the output of {@link System#nanoTime()} will
+     * always be positive.
+     *
+     * @return  seed
+     */
+    public static long generateSeed() {
+        long time = System.nanoTime();
+        return (time < 0) ? -time : time;
+    }
+
+    /**
+     * Produces a realisation from the standard uniform distribution (where the samples are
+     * uniformly distributed from [0, 1]).
+     *
+     * @return  sample from standard uniform distribution
+     */
+    public static double uniform() {
+        double output = ((double) lcg64(generateSeed()))/ Long.MAX_VALUE;
+        return (output < 0) ? -output : output;
+    }
+
+    /**
+     * Produces a sample of a uniform distribution on U[low, high] by transforming the standard
+     * uniform distribution to fit the range while still maintain uniformity.
+     *
+     * @param   low - the lowest value in the uniform distribution
+     * @param   high - the highest value in the uniform distribution
+     * @return  sample of uniform distribution ~ U[low, high]
+     */
+    public static double uniform(double low, double high) {
+        return uniform() * (high - low) + low;
     }
 }
