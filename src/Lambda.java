@@ -1,7 +1,12 @@
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 /**
- * <i>joe</i>
+ * The class {@code Lambda} contains methods to deal with random sampling from various
+ * distributions, counting, pseudo-random number generation, as well as other functionalities.
+ *
+ * <p>Many methods from this class are/were inspired by {@link Math#random()} and by
+ * {@code numpy.random} (the {@code python} module).
  */
 public final class Lambda {
 
@@ -136,7 +141,7 @@ public final class Lambda {
      * restriction of the seed is to be positive, the output of {@link System#nanoTime()} will
      * always be positive.
      *
-     * @return  seed
+     * @return seed
      */
     public static long generateSeed() {
         long time = System.nanoTime();
@@ -164,5 +169,37 @@ public final class Lambda {
      */
     public static double uniform(double low, double high) {
         return uniform() * (high - low) + low;
+    }
+
+    /**
+     * Returns an array of a given size where each element is uniformly distributed as seen in
+     * {@link Lambda#uniform(double, double)}. The approach is done using streams, where a
+     * stream is created, then for every value in the stream maps it to a uniform sample.
+     *
+     * @param   size - size of the array returned
+     * @param   low - the lowest value in the uniform distribution
+     * @param   high - the highest value in the uniform distribution
+     * @return  array of uniform samples ~ U[low, high]
+     */
+    public static double[] uniform(double low, double high, int size) {
+        /* Handles faulty input */
+        if (size < 0) throw new IllegalArgumentException("Size must be a non-negative integer.");
+        else if (size == 0) return new double[0];
+
+        /* Makes use of streams to generate uniform samples */
+        return Arrays.stream(new double[size])
+                .map(i -> uniform(low, high))
+                .toArray();
+    }
+
+    /**
+     * Overloaded method of {@link Lambda#uniform(double, double, int)} however returns an array
+     * of realisations of the standard uniform distribution.
+     *
+     * @param   size - sized of the returned array
+     * @return  array of standard uniform realisations.
+     */
+    public static double[] uniform(int size) {
+        return uniform(size, 0, 1);
     }
 }
