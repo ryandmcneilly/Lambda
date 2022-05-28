@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.lang.Math;
 import java.util.List;
+import java.lang.Math;
+
 
 /**
  * The class {@code Lambda} contains methods to deal with random sampling from various
@@ -369,6 +370,18 @@ public final class Lambda {
     public static double pnorm(double x, double mu, double sigma) {
         // Relating the error function to the CDF of the normal distribution
         return 0.5 * (1 + erf((x - mu) / (Math.sqrt(2) * sigma)));
+    }
+
+    /**
+     * Overloaded method of {@link Lambda#pnorm(double)} for the standard normal distribution
+     * (where {@code mu = 0} and {@code sigma = 1}).
+     *
+     * @param   x - input for the function
+     * @return  approximation to the CDF of a normal distribution at {@code x}
+     */
+    public static double pnorm(double x) {
+        // Relating the error function to the CDF of the normal distribution
+        return 0.5 * (1 + erf((x) / (Math.sqrt(2))));
     }
 
     /**
