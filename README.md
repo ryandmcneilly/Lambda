@@ -15,6 +15,5 @@ as well as learning to work with probability and cumulative density functions.
 - Ability to sample from numerous distributions (exponential, normal, etc.)
 - Numerical approximation to the error function
 - Handy functions dealing with CDF's (alike `pnorm()` in `R`)
-- Shuffle arrays and lists
 - Finds all permutations of a given integer array
 
