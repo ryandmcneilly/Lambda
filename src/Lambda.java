@@ -1,5 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.Math;
+import java.util.List;
 
 /**
  * The class {@code Lambda} contains methods to deal with random sampling from various
@@ -267,6 +269,7 @@ public final class Lambda {
                 .toArray();
     }
 
+
     /**
      * Returns a sample from the normal distribution with given parameters <i>mu</i> and
      * <i>sigma</i>. As the normal has a difficult cumulative distributive function to work with,
@@ -319,10 +322,53 @@ public final class Lambda {
      * standard normal realisations.
      *
      * @param   size - size of the array returned
-     * @return array standard normal samples
+     * @return  array standard normal samples
      */
     public static double[] normal(int size) {
         return normal(0, 1, size);
+    }
+
+    /**
+     * Returns a numerical approximation of the error function (erf x). The numerical
+     * approximation comes from the mathematical reference work Abramowitz and Stegun (AS)
+     * (informal name). The full title of the work Handbook of Mathematical Functions with Formulas,
+     * Graphs, and Mathematical Table.
+     *
+     * The numerical method used can be found in chapter 7.1 (specifically equation 26). The
+     * approximation has a maximum error of {@code 5 x 10^(-4)}, however this is not taking into
+     * other errors related to floating point errors etc.
+     *
+     * @param   x - input for the error function
+     * @return  output of the error function
+     */
+    public static double erf(double x) {
+        double t = 1/(1 + 0.47047 * x);
+        double alpha1 = 0.3480242;
+        double alpha2 = -0.0958798;
+        double alpha3 =  0.7478556;
+
+        // Application of Abramowitz and Stegun equation 7.1.26
+        return 1 - (alpha1 * t + alpha2 * Math.pow(t, 2) + alpha3 * Math.pow(t, 3))
+                * Math.exp(-Math.pow(x, 2));
+    }
+
+    /**
+     * This method imitates the {@code pnorm} function in {@code R}. To be more specific, the
+     * method finds the cumulative distribution function (CDF) at the point {@code x} for a given
+     * mu and sigma. In other words, gets the probability that a random sample is smaller than the
+     * given {@code x}.
+     *
+     * This method uses the error function approximation found at {@link Lambda#erf(double)} in
+     * order to relate the error function and the CDF of a normal distribution.
+     *
+     * @param   x - input for the function
+     * @param   mu - mean of the normal distribution
+     * @param   sigma - standard deviation of the normal distribution
+     * @return  approximation to the CDF of a normal distribution at {@code x}
+     */
+    public static double pnorm(double x, double mu, double sigma) {
+        // Relating the error function to the CDF of the normal distribution
+        return 0.5 * (1 + erf((x - mu) / (Math.sqrt(2) * sigma)));
     }
 
     /**
@@ -385,5 +431,50 @@ public final class Lambda {
         return Arrays.stream(new int[size])
                 .map(i -> poisson(lambda))
                 .toArray();
+    }
+
+    /**
+     * Method that deals with getting all possible permutations of an array of integers. The
+     * output is put into a list of lists to store all the different permutations. The solution
+     * is done recursively, making use of the helper method.
+     * {@link Lambda#collectPermutations(int[], int, List, List)}. Inspiration for this solution
+     * came from
+     * <a href="https://leetcode.com/problems/permutations/discuss/18436/Java-Clean-Code-Two-recursive-solutions">a leetcode problem</a>.
+     *
+     * @param   numbers - array of numbers
+     * @return  list of lists of all permutations of the array given
+     */
+    public static List<List<Integer>> permute(int[] numbers) {
+        List<List<Integer>> permutations = new ArrayList<>();
+        if (numbers.length == 0) {
+            return permutations;
+        }
+
+        collectPermutations(numbers, 0, new ArrayList<>(), permutations);
+        return permutations;
+    }
+
+    /**
+     * Helper method for {@link Lambda#permute(int[])} that deals with the recursive element of
+     * the permutations.
+     *
+     * @param   numbers - array of number
+     * @param   start - stores index
+     * @param   permutation - list of integers that is used to build the permutation
+     * @param   permutations - list of lists containing the output
+     */
+    private static void collectPermutations(int[] numbers, int start, List<Integer> permutation,
+            List<List<Integer>>  permutations) {
+
+        if (permutation.size() == numbers.length) {
+            permutations.add(permutation);
+            return;
+        }
+
+        for (int i = 0; i <= permutation.size(); i++) {
+            List<Integer> newPermutation = new ArrayList<>(permutation);
+            newPermutation.add(i, numbers[start]);
+            collectPermutations(numbers, start + 1, newPermutation, permutations);
+        }
     }
 }
