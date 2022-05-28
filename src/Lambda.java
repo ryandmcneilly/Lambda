@@ -63,6 +63,17 @@ public final class Lambda {
                 Integer.MAX_VALUE);
     }
 
+    /**
+     * Returns an {@code array} of a given size of pseudo-random number generated numbers,
+     * where the numbers in the array are based on the seed given. The returned array are of long
+     * type (64 bit). For the integer array see {@link Lambda#lcg32Array(int, int, int, int)}.
+     *
+     * @param   seed - seed of the linear congruential generator (X_{n-1})
+     * @param   multiplier - multiplier (a)
+     * @param   increment - increment (c)
+     * @param   size - size of the resulting array
+     * @return  array of pseudo-random numbers
+     */
     public static long[] lcg64Array(long seed, long multiplier, long increment, int size) {
         /* Handles faulty input. */
         if (size < 0) throw new IllegalArgumentException("Size must be a non-negative integer.");
@@ -80,13 +91,32 @@ public final class Lambda {
         return output;
     }
 
+    /**
+     * Similar to {@link Lambda#lcg64Array(long, long, long, int)} however uses a fixed
+     * multiplier and increment which optimises the period.
+     *
+     * @param   seed - seed of the linear congruential generator (X_{n-1})
+     * @param   size - size of the resulting array
+     * @return  array of pseudo-random numbers
+     */
     public static long[] lcg64Array(long seed, int size) {
         return lcg64Array(seed, 5428252657583070383L, 0, size);
     }
 
+    /**
+     * Returns array of pseudo random numbers alike
+     * {@link Lambda#lcg64Array(long, long, long, int)}, however returns an array of integers
+     * rather than longs (hence 32-bit).
+     *
+     * @param   seed - seed of the linear congruential generator (X_{n-1})
+     * @param   multiplier - multiplier (a)
+     * @param   increment - increment (c)
+     * @param   size - size of the resulting array
+     * @return  array of pseudo-random numbers
+     */
     public static int[] lcg32Array(int seed, int multiplier, int increment, int size) {
         return Arrays.stream(lcg64Array(seed, multiplier, increment, size))
-                .mapToInt(i -> i)
+                .mapToInt(i -> (int) i)
                 .toArray();
     }
 }
