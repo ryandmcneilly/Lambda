@@ -8,7 +8,6 @@ The idea for creating this class stemmed from the course STAT2003 - Mathemtical 
 a course at the University of Queensland (UQ) which takes a student through sampling from distributions and random number generation
 as well as learning to work with probability and cumulative density functions.
 
-
 ## Features
 
 - Pseudo-random Number Generation (using linear congruential generators)
