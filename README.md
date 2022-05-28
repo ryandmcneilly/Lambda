@@ -13,7 +13,8 @@ as well as learning to work with probability and cumulative density functions.
 
 - Pseudo-random Number Generation (using linear congruential generators)
 - Ability to sample from numerous distributions (exponential, normal, etc.)
-- Handy functions dealing with CDF's (alike `pnorm()` in `R`) (in construction)
-- Shuffle arrays and lists (in construction)
-- Permutations (in construction)
+- Numerical approximation to the error function
+- Handy functions dealing with CDF's (alike `pnorm()` in `R`)
+- Shuffle arrays and lists
+- Finds all permutations of a given integer array
 
