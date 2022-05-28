@@ -297,4 +297,93 @@ public final class Lambda {
     public static double normal() {
         return normal(0, 1);
     }
+
+    /**
+     * Returns an array of normal distribution samples using the <i>Box-Muller transformation</i>
+     * as mentioned in {@link Lambda#normal(double, double)}.
+     *
+     * @param   mu - mean of the normal distribution
+     * @param   sigma - standard deviation of the normal distribution
+     * @param   size - size of the array returned
+     * @return  sample of the given normal distribution ~ N(mu, sigma)
+     */
+    public static double[] normal(double mu, double sigma, int size) {
+        if (size < 0) throw new IllegalArgumentException("Size must be a non-negative integer.");
+        return Arrays.stream(new double[size])
+                .map(i -> normal(mu, sigma))
+                .toArray();
+    }
+
+    /**
+     * Returns an array similar to {@link Lambda#normal(double, double, int)} however samples
+     * standard normal realisations.
+     *
+     * @param   size - size of the array returned
+     * @return array standard normal samples
+     */
+    public static double[] normal(int size) {
+        return normal(0, 1, size);
+    }
+
+    /**
+     * Samples a geometric distribution where <i>k</i> starts at {@code 0}. This is performed
+     * using the inverse transform sampling method.
+     *
+     * @param   p - success probability
+     * @return  sample from geometric distribution with parameter p
+     */
+    public static int geometric(double p) {
+        if (!(0 <= p || p <= 1)) throw new IllegalArgumentException("0 <= p <= 1 must hold.");
+        return (int) Math.floor(Math.log(1 - uniform()) / Math.log(1 - p));
+    }
+
+    /**
+     * Samples a geometric distribution and puts the results into an array which is then returned
+     * . The functionality of the geometric distribution can be found
+     * {@link Lambda#geometric(double)} here.
+     *
+     * @param   p - success probability
+     * @param   size - size of the array returned
+     * @return  sample from geometric distribution with parameter p
+     */
+    public static int[] geometric(double p, int size) {
+        if (size < 0) throw new IllegalArgumentException("Size must be a non-negative integer.");
+        return Arrays.stream(new int[size])
+                .map(i -> geometric(p))
+                .toArray();
+    }
+
+    /**
+     * Samples a random poisson random variable. As the cumulative distributive function of a
+     * poisson random variable is not invertible, thus a simulation is done using the definition
+     * of a poisson random variable.
+     *
+     * @param   lambda - parameter for the distribution
+     * @return  sample poisson random variable
+     */
+    public static int poisson(double lambda) {
+        int sum = 0;
+        int n = -1;
+
+        while (sum < 1) {
+            sum += exponential(lambda);
+            n++;
+        }
+        return n;
+    }
+
+    /**
+     * Returns an array of poisson random variables, where each sample comes can be seen
+     * {@link Lambda#poisson(double)}.
+     *
+     * @param   lambda - parameter for the distribution
+     * @param   size - size of the array returned
+     * @return  array consisting of independent samples from the poisson distribution
+     */
+    public static int[] poisson(double lambda, int size) {
+        if (size < 0) throw new IllegalArgumentException("Size must be a non-negative integer.");
+        return Arrays.stream(new int[size])
+                .map(i -> poisson(lambda))
+                .toArray();
+    }
 }
