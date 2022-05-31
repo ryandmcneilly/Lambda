@@ -31,8 +31,6 @@ public final class Lambda {
      */
     public static final double PI = 3.14159265358979323846;
 
-    private long seed = 0;
-
     /**
      * Returns pseudo-random double using a <i>linear congruential generator</i> which outputs
      * value from {@code -2147483647} to {@code 2147483647}, however this depends on the
